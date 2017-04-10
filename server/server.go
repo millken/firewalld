@@ -29,9 +29,13 @@ func (self *Server) Stop() {
 }
 
 func (self *Server) ServeAPI() {
-	self.wg.Add(1)
+	self.wg.Add(2)
 	go func() {
 		defer self.wg.Done()
 		self.serverCmdAPI(self.conf.CmdApiAddr, self.stopC)
+	}()
+	go func() {
+		defer self.wg.Done()
+		self.serveHttpAPI(self.conf.HttpApiAddr, self.stopC)
 	}()
 }
