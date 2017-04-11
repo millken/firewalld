@@ -47,6 +47,7 @@ func (self *Server) serveHttpAPI(addr string, stopC <-chan struct{}) {
 		log.Fatalf("http api parameter error : %s", err)
 	}
 
+	gin.SetMode(gin.ReleaseMode)
 	httpS := gin.Default()
 	httpS.POST("/ipf", self.ipf)
 

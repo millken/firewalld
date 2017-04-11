@@ -68,11 +68,14 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicWhitelistIp:
-		if len(cmd.Args) != 3 {
-			conn.WriteString("Err wrong number of argument")
-		} else {
+		if len(cmd.Args) == 3 {
 			ipset.Add(DynamicWhitelistIp, args[1], "timeout", args[2])
 			conn.WriteString("OK")
+		} else if len(cmd.Args) == 2 {
+			ipset.Add(DynamicWhitelistIp, args[1])
+			conn.WriteString("OK")
+		} else {
+			conn.WriteString("Err wrong number of argument")
 		}
 	case "del" + DynamicWhitelistIp:
 		if len(cmd.Args) != 2 {
@@ -82,11 +85,14 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicWhitelistNet:
-		if len(cmd.Args) != 3 {
-			conn.WriteString("Err wrong number of argument")
-		} else {
+		if len(cmd.Args) == 3 {
 			ipset.Add(DynamicWhitelistNet, args[1], "timeout", args[2])
 			conn.WriteString("OK")
+		} else if len(cmd.Args) == 2 {
+			ipset.Add(DynamicWhitelistNet, args[1])
+			conn.WriteString("OK")
+		} else {
+			conn.WriteString("Err wrong number of argument")
 		}
 	case "del" + DynamicWhitelistNet:
 		if len(cmd.Args) != 2 {
@@ -96,11 +102,14 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicBlacklistIp:
-		if len(cmd.Args) != 3 {
-			conn.WriteString("Err wrong number of argument")
-		} else {
+		if len(cmd.Args) == 3 {
 			ipset.Add(DynamicBlacklistIp, args[1], "timeout", args[2])
 			conn.WriteString("OK")
+		} else if len(cmd.Args) == 2 {
+			ipset.Add(DynamicBlacklistIp, args[1])
+			conn.WriteString("OK")
+		} else {
+			conn.WriteString("Err wrong number of argument")
 		}
 	case "del" + DynamicBlacklistIp:
 		if len(cmd.Args) != 2 {
@@ -110,11 +119,14 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicBlacklistNet:
-		if len(cmd.Args) != 3 {
-			conn.WriteString("Err wrong number of argument")
-		} else {
+		if len(cmd.Args) == 3 {
 			ipset.Add(DynamicBlacklistNet, args[1], "timeout", args[2])
 			conn.WriteString("OK")
+		} else if len(cmd.Args) == 2 {
+			ipset.Add(DynamicBlacklistNet, args[1])
+			conn.WriteString("OK")
+		} else {
+			conn.WriteString("Err wrong number of argument")
 		}
 	case "del" + DynamicBlacklistNet:
 		if len(cmd.Args) != 2 {
