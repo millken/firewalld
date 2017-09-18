@@ -4,9 +4,11 @@ import (
 	"errors"
 	"log"
 	"net/url"
+	"os"
 	"runtime"
 	"strings"
 
+	"github.com/millken/firewalld/worker"
 	"github.com/millken/go-ipset"
 	"github.com/millken/raphanus"
 	"github.com/tidwall/redcon"
@@ -69,10 +71,10 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 		}
 	case "add" + DynamicWhitelistIp:
 		if len(cmd.Args) == 3 {
-			ipset.Add(DynamicWhitelistIp, args[1], "timeout", args[2])
+			worker.AddJob("add", DynamicWhitelistIp, args[1], args[2])
 			conn.WriteString("OK")
 		} else if len(cmd.Args) == 2 {
-			ipset.Add(DynamicWhitelistIp, args[1])
+			worker.AddJob("add", DynamicWhitelistIp, args[1], "")
 			conn.WriteString("OK")
 		} else {
 			conn.WriteString("Err wrong number of argument")
@@ -81,15 +83,15 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(DynamicWhitelistIp, args[1])
+			worker.AddJob("del", DynamicWhitelistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicWhitelistNet:
 		if len(cmd.Args) == 3 {
-			ipset.Add(DynamicWhitelistNet, args[1], "timeout", args[2])
+			worker.AddJob("add", DynamicWhitelistNet, args[1], args[2])
 			conn.WriteString("OK")
 		} else if len(cmd.Args) == 2 {
-			ipset.Add(DynamicWhitelistNet, args[1])
+			worker.AddJob("add", DynamicWhitelistNet, args[1], "")
 			conn.WriteString("OK")
 		} else {
 			conn.WriteString("Err wrong number of argument")
@@ -98,15 +100,15 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(DynamicWhitelistNet, args[1])
+			worker.AddJob("del", DynamicWhitelistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicBlacklistIp:
 		if len(cmd.Args) == 3 {
-			ipset.Add(DynamicBlacklistIp, args[1], "timeout", args[2])
+			worker.AddJob("add", DynamicBlacklistIp, args[1], args[2])
 			conn.WriteString("OK")
 		} else if len(cmd.Args) == 2 {
-			ipset.Add(DynamicBlacklistIp, args[1])
+			worker.AddJob("add", DynamicBlacklistIp, args[1], "")
 			conn.WriteString("OK")
 		} else {
 			conn.WriteString("Err wrong number of argument")
@@ -115,15 +117,15 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(DynamicBlacklistIp, args[1])
+			worker.AddJob("del", DynamicBlacklistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + DynamicBlacklistNet:
 		if len(cmd.Args) == 3 {
-			ipset.Add(DynamicBlacklistNet, args[1], "timeout", args[2])
+			worker.AddJob("add", DynamicBlacklistNet, args[1], args[2])
 			conn.WriteString("OK")
 		} else if len(cmd.Args) == 2 {
-			ipset.Add(DynamicBlacklistNet, args[1])
+			worker.AddJob("add", DynamicBlacklistNet, args[1], "")
 			conn.WriteString("OK")
 		} else {
 			conn.WriteString("Err wrong number of argument")
@@ -132,63 +134,63 @@ func (self *Server) serverCmd(conn redcon.Conn, cmd redcon.Command) {
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(DynamicBlacklistNet, args[1])
+			worker.AddJob("del", DynamicBlacklistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + StaticWhitelistIp:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Add(StaticWhitelistIp, args[1])
+			worker.AddJob("add", StaticWhitelistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "del" + StaticWhitelistIp:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(StaticWhitelistIp, args[1])
+			worker.AddJob("del", StaticWhitelistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + StaticWhitelistNet:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Add(StaticWhitelistNet, args[1])
+			worker.AddJob("add", StaticWhitelistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "del" + StaticWhitelistNet:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(StaticWhitelistNet, args[1])
+			worker.AddJob("del", StaticWhitelistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + StaticBlacklistIp:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Add(StaticBlacklistIp, args[1])
+			worker.AddJob("add", StaticBlacklistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "del" + StaticBlacklistIp:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(StaticBlacklistIp, args[1])
+			worker.AddJob("del", StaticBlacklistIp, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "add" + StaticBlacklistNet:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Add(StaticBlacklistNet, args[1])
+			worker.AddJob("add", StaticBlacklistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "del" + StaticBlacklistNet:
 		if len(cmd.Args) != 2 {
 			conn.WriteString("Err wrong number of argument")
 		} else {
-			ipset.Del(StaticBlacklistNet, args[1])
+			worker.AddJob("del", StaticBlacklistNet, args[1], "")
 			conn.WriteString("OK")
 		}
 	case "quit":
@@ -226,5 +228,6 @@ func (self *Server) serverCmdAPI(addr string, stopC <-chan struct{}) {
 	}()
 	<-stopC
 	redisS.Close()
+	os.Remove(u.Path)
 	log.Printf("cmd api server exit\n")
 }

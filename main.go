@@ -13,6 +13,7 @@ import (
 
 	"github.com/judwhite/go-svc/svc"
 	"github.com/millken/firewalld/server"
+	"github.com/millken/firewalld/worker"
 )
 
 const Binary = "0.0.2"
@@ -94,6 +95,7 @@ iptables -I INPUT  -m set --match-set swn src -p TCP -m multiport --dports 80,12
 	loadConf, _ := json.MarshalIndent(serverConf, "", " ")
 	fmt.Printf("loading with conf:%v\n", string(loadConf))
 	app := server.NewServer(serverConf)
+	go worker.Run()
 	app.ServeAPI()
 	p.server = app
 	return nil
