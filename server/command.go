@@ -206,6 +206,10 @@ func (self *Server) serverCmdAPI(addr string, stopC <-chan struct{}) {
 	if err != nil {
 		log.Fatalf("cmd api parameter error : %s", err)
 	}
+	if u.Scheme == "udp" {
+		self.serverUDP(u.Host, stopC)
+		return
+	}
 	redisS := redcon.NewServerNetwork(
 		u.Scheme,
 		u.Host+u.Path,
