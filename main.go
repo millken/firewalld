@@ -80,6 +80,11 @@ iptables -I INPUT  -m set --match-set swn src -p TCP -m multiport --dports 80,12
 		fmt.Println(cmd)
 		os.Exit(0)
 	}
+
+	if os.Geteuid() != 0 {
+		log.Printf("requires root!")
+		os.Exit(0)
+	}
 	var serverConf server.ServerConfig
 	if *configFilePath != "" {
 		d, err := ioutil.ReadFile(*configFilePath)
